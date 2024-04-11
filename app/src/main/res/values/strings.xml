@@ -1,3 +1,7 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">UtarDo</string>
+=======
+    <string name="app_name">UTAR do</string>
+>>>>>>> master
 </resources>
