@@ -13,9 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-<<<<<<< HEAD
-rootProject.name = "UtarDo"
-=======
 rootProject.name = "UTAR do"
->>>>>>> master
 include ':app'

@@ -1,9 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-<<<<<<< HEAD
-    <style name="Base.Theme.UtarDo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-=======
     <style name="Base.Theme.UTARDo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/primary</item>
@@ -11,7 +7,6 @@
 
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorSecondaryVariant">@color/secondary</item>
->>>>>>> master
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>
