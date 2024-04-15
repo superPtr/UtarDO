@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
     GoogleSignInClient gsc;
 
     TextView accEmail, accName;
-    Button accSignout, label;
+    Button accSignout, label, homepage, calendarpage, settingpage;
 
     FirebaseAuth mAuth;
 
@@ -79,6 +79,45 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(MainActivity.this, LabelPage.class);
             startActivity(intent);
         });
+
+
+
+        homepage = findViewById(R.id.homepage);
+        calendarpage = findViewById(R.id.calendarpage);
+        settingpage = findViewById(R.id.settingpage);
+
+
+
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the Homepage activity
+                Intent intent = new Intent(MainActivity.this, HomePage.class);
+                startActivity(intent);
+            }
+        });
+
+        calendarpage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the Homepage activity
+                Intent intent = new Intent(MainActivity.this, CalendarPage.class);
+                startActivity(intent);
+            }
+        });
+
+        settingpage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the Homepage activity
+                Intent intent = new Intent(MainActivity.this, SettingPage.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
     }
     private void displayFirebaseUserDetails(FirebaseUser user) {
         String personEmail = user.getEmail();

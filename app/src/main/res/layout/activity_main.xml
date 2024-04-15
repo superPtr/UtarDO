@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Continue label page" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,13 +42,42 @@
         android:textSize="24sp"/>
 
     <Button
-        android:id="@+id/label"
+        android:id="@+id/homepage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Continue label page"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/accSignout"
         android:layout_below="@+id/accEmail"
-        android:layout_marginTop="20dp"/>
+        android:layout_alignStart="@+id/label"
+        android:layout_alignEnd="@+id/label"
+        android:layout_marginStart="-118dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="118dp"
+        android:layout_marginBottom="47dp"
+        android:text="Home Page" />
+
+    <Button
+        android:id="@+id/settingpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/accSignout"
+        android:layout_below="@+id/accEmail"
+        android:layout_alignStart="@+id/label"
+        android:layout_alignEnd="@+id/label"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginEnd="-50dp"
+        android:layout_marginBottom="100dp"
+        android:text="Setting Page" />
+
+    <Button
+        android:id="@+id/calendarpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/accSignout"
+        android:layout_below="@+id/accEmail"
+        android:layout_marginTop="103dp"
+        android:layout_marginBottom="112dp"
+        android:text="Calendar Page" />
 
     <Button
         android:id="@+id/accSignout"
