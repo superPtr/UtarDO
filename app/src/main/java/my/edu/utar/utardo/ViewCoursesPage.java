@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,12 +39,22 @@ public class ViewCoursesPage extends BaseActivity {
 
         TextView labelName = findViewById(R.id.labelName);
         ImageView backButton = findViewById(R.id.leftBack);
+        ImageView addCourseBtn = findViewById(R.id.addCourseBtn);
 
         //handle back button click here
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        // Set click listener for add course button
+        addCourseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add new course
+                handleAddCourse(selectedLabel);
             }
         });
 
@@ -76,21 +88,28 @@ public class ViewCoursesPage extends BaseActivity {
         }
         // In ViewCoursesPageActivity
 
-            readFromFirestore("users", userEmail, "labels/" + selectedLabel + "/Courses", new OnReadCompleteListener() {
-                @Override
-                public void onReadComplete(Map<String, Object> data) {
-                    coursesList.clear();
-                    for (String documentId : data.keySet()) {
-                        Course course = new Course(documentId);
-                        coursesList.add(course);
-                    }
-                    coursesAdapter.notifyDataSetChanged();
+        readFromFirestore("users", userEmail, "labels/" + selectedLabel + "/Courses", new OnReadCompleteListener() {
+            @Override
+            public void onReadComplete(Map<String, Object> data) {
+                coursesList.clear();
+                for (String documentId : data.keySet()) {
+                    Course course = new Course(documentId);
+                    coursesList.add(course);
                 }
+                coursesAdapter.notifyDataSetChanged();
+            }
 
-                @Override
-                public void onReadError(Exception e) {
-                    // Handle error
-                }
-            });
-        }
+            @Override
+            public void onReadError(Exception e) {
+                // Handle error
+            }
+        });
     }
+
+    // Method to handle add course event
+    private void handleAddCourse(String labelText) {
+        Intent intent = new Intent(this, CreateCourse.class);
+        intent.putExtra("selectedLabel", labelText);
+        startActivity(intent);
+    }
+}
