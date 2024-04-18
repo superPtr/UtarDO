@@ -85,7 +85,6 @@ public class CreateCourse extends AppCompatActivity {
             docRef = db.collection("users").document(userEmail).collection("labels").document(selectedLabel);
         } else {
             Toast.makeText(this, "User email not found, cannot create course.", Toast.LENGTH_LONG).show();
-            finish(); // Close activity if user email is not found
         }
     }
 
@@ -118,7 +117,7 @@ public class CreateCourse extends AppCompatActivity {
                 courseData.put("tutorialGroup", tutorialGroup);
 
                 // Reference to the specific document in the sub-collection or create the document with id is courseCode if it didn't exist
-                DocumentReference courseDocRef = docRef.collection("Courses").document(courseCode);
+                DocumentReference courseDocRef = docRef.collection("courses").document(courseCode);
 
                 // create or overwrite the document with courseCode as the ID
                 courseDocRef.set(courseData)
