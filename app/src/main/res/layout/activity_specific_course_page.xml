@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary"
+        android:padding="8dp">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/leftBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <!-- Course ID and Name -->
+        <TextView
+            android:id="@+id/courseId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/leftBack"
+            android:layout_marginStart="15dp"
+            android:layout_centerVertical="true" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/courseId"
+            android:layout_marginTop="-10dp"
+            android:paddingStart="38dp"
+            android:text=""
+            android:textSize="23sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Events Section -->
+    <RelativeLayout
+        android:id="@+id/eventsSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topBar"
+        android:layout_marginTop="10dp"
+        android:padding="16dp">
+
+        <!-- Events Title -->
+        <TextView
+            android:id="@+id/eventsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Add Events Button -->
+        <Button
+            android:id="@+id/addEventsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="add"
+            android:onClick="addEvent"/>
+
+        <!-- Events Container -->
+        <LinearLayout
+            android:id="@+id/eventsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addEventsButton"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <!-- Events RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eventsContainer"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
+
+    <!-- Tasks Section -->
+    <RelativeLayout
+        android:id="@+id/tasksSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventsSection"
+        android:layout_marginTop="10dp"
+        android:padding="16dp">
+
+        <!-- Tasks Title -->
+        <TextView
+            android:id="@+id/tasksTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tasks"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Add Tasks Button -->
+        <Button
+            android:id="@+id/addTasksBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="add"
+            android:onClick="addTask"/>
+
+        <!-- Tasks Container -->
+        <LinearLayout
+            android:id="@+id/tasksContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addTasksBtn"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <!-- Tasks RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tasksContainer"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,3 +1,4 @@
+// EventAdapter
 package my.edu.utar.utardo;
 
 import android.view.LayoutInflater;
@@ -6,12 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
-
-import my.edu.utar.utardo.Event;
-import my.edu.utar.utardo.R;
-
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> eventList;
@@ -31,7 +27,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.textViewEventTitle.setText(event.getTitle());
+        holder.textViewEventTitle.setText(event.getEventName());
     }
 
     @Override
@@ -46,5 +42,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             super(itemView);
             textViewEventTitle = itemView.findViewById(R.id.textViewEventTitle);
         }
+    }
+
+    public void setEvents(List<Event> eventList) {
+        this.eventList = eventList;
+        notifyDataSetChanged();
     }
 }

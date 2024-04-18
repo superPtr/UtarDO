@@ -15,7 +15,21 @@
         android:theme="@style/Theme.UTARDo"
         tools:targetApi="31">
         <activity
+            android:name=".AddEvent"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".ViewTasksPage"
+            android:exported="false" />
+        <activity
+            android:name=".ViewEventsPage"
+            android:exported="false" />
+        <activity
+            android:name=".SpecificCoursePage"
+            android:exported="false" />
+        <activity
             android:name=".AddTask"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".CreateCourse"

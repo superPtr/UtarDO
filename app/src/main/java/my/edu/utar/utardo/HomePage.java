@@ -38,22 +38,22 @@ public class HomePage extends AppCompatActivity {
         recyclerViewEvents = findViewById(R.id.recyclerViewEvents);
         recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
 
-        // Initialize event list
-        eventList = new ArrayList<>();
-        eventList.add(new Event("Event 1"));
-        eventList.add(new Event("Event 2"));
-        eventList.add(new Event("Event 44"));
-        eventList.add(new Event("Event 42"));
-        eventList.add(new Event("Event 43"));
-        eventList.add(new Event("Event 32"));
-        eventList.add(new Event("Event 443"));
-        eventList.add(new Event("Event 453"));
-
-        // Initialize task list
-        taskList = new ArrayList<>();
-        taskList.add(new Task("Task 1"));
-        taskList.add(new Task("Task 2"));
-        taskList.add(new Task("Task 3"));
+//        // Initialize event list
+//        eventList = new ArrayList<>();
+//        eventList.add(new Event("Event 1"));
+//        eventList.add(new Event("Event 2"));
+//        eventList.add(new Event("Event 44"));
+//        eventList.add(new Event("Event 42"));
+//        eventList.add(new Event("Event 43"));
+//        eventList.add(new Event("Event 32"));
+//        eventList.add(new Event("Event 443"));
+//        eventList.add(new Event("Event 453"));
+//
+//        // Initialize task list
+//        taskList = new ArrayList<>();
+//        taskList.add(new Task("Task 1"));
+//        taskList.add(new Task("Task 2"));
+//        taskList.add(new Task("Task 3"));
 
         // Initialize adapters
         eventAdapter = new EventAdapter(eventList);

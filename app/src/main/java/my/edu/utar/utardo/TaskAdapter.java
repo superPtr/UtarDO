@@ -1,3 +1,4 @@
+// TaskAdapter
 package my.edu.utar.utardo;
 
 import android.view.LayoutInflater;
@@ -8,9 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-
-import my.edu.utar.utardo.R;
-import my.edu.utar.utardo.Task;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
@@ -31,19 +29,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
         holder.textViewTaskTitle.setText(task.getTitle());
-
         // Set initial checkbox state
         holder.checkboxDone.setChecked(task.isDone());
 
         // Set listener to toggle checkbox state and delete task
         holder.checkboxDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Update task object's done state
+            // Remove the task from the list if checkbox is checke
             task.setDone(isChecked);
             if (isChecked) {
-                // Remove the task from the list if checkbox is checked
                 taskList.remove(position);
-                // Notify adapter about the item removal
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
             }
         });
     }
@@ -62,5 +57,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             textViewTaskTitle = itemView.findViewById(R.id.textViewTaskTitle);
             checkboxDone = itemView.findViewById(R.id.checkboxDone);
         }
+    }
+
+    public void setTasks(List<Task> taskList) {
+        this.taskList = taskList;
+        notifyDataSetChanged();
     }
 }

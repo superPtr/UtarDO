@@ -5,6 +5,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,45 +30,58 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class AddTask extends AppCompatActivity {
-
+public class AddEvent extends AppCompatActivity {
     private String selectedLabel, selectedCourse;
-    private EditText taskTitleInput, detailsInput;
-    private Spinner labelSpinner, courseIDSpinner, startDaySpr, startMonthSpr, startYearSpr, endDaySpr, endMonthSpr, endYearSpr;
-    private LinearLayout startDateLayout, endDateLayout;
-    private Switch reminderSwitch;
+    private EditText eventNameInput, detailsInput;
+    private Spinner labelSpinner, courseIDSpinner;
+    private Calendar myCalendar;
     private DocumentReference docRef;
     private CollectionReference colLabelRef, colCourseRef;
 
-    // initialize database
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_add_event);
+
+        // initialize database
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        myCalendar = null;
+
+
+        myCalendar = Calendar.getInstance();
+        View dateButton = findViewById(R.id.imageButtonDate);
+
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, monthOfYear, dayOfMonth) -> {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateDateDisplay();
+        };
+
+        dateButton.setOnClickListener(v -> new DatePickerDialog(this, dateSetListener,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         labelSpinner = findViewById(R.id.labelSpinner);
         courseIDSpinner = findViewById(R.id.courseIDSpinner);
-        taskTitleInput = findViewById(R.id.taskTitleInput);
+        eventNameInput = findViewById(R.id.eventNameInput);
         detailsInput = findViewById(R.id.detailsInput);
-        reminderSwitch = findViewById(R.id.reminderSwitch);
-        startDateLayout = findViewById(R.id.startDateLayout);
-        endDateLayout = findViewById(R.id.endDateLayout);
 
         // Retrieve the selectedLabel & selectedCourse from the previous activity
         selectedLabel = getIntent().getStringExtra("selectedLabel");
         selectedCourse = getIntent().getStringExtra("selectedCourse");
-
 
         String userEmail = currentUser != null ? currentUser.getEmail() : null;
 
@@ -87,14 +102,6 @@ public class AddTask extends AppCompatActivity {
 
         loadLabel(colLabelRef);
         loadCourseID(colCourseRef);
-
-        setupDateSpinners((Spinner) findViewById(R.id.spinnerStartDay), (Spinner) findViewById(R.id.spinnerStartMonth), (Spinner) findViewById(R.id.spinnerStartYear));
-        setupDateSpinners((Spinner) findViewById(R.id.spinnerEndDay), (Spinner) findViewById(R.id.spinnerEndMonth), (Spinner) findViewById(R.id.spinnerEndYear));
-
-        reminderSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            startDateLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            endDateLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
     }
 
     // back button
@@ -102,43 +109,25 @@ public class AddTask extends AppCompatActivity {
         finish();
     }
 
-    private void setupDateSpinners(Spinner daySpinner, Spinner monthSpinner, Spinner yearSpinner) {
-        ArrayAdapter<Integer> dayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, generateNumberList(1, 31));
-        ArrayAdapter<Integer> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, generateNumberList(1, 12));
-        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, generateNumberList(1900, Calendar.getInstance().get(Calendar.YEAR)));
-
-        daySpinner.setAdapter(dayAdapter);
-        monthSpinner.setAdapter(monthAdapter);
-        yearSpinner.setAdapter(yearAdapter);
-    }
-
-    private List<Integer> generateNumberList(int start, int end) {
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
-            numbers.add(i);
-        }
-        return numbers;
-    }
-
     // retrieve label from firestore
     private void loadLabel(CollectionReference colLabelRef) {
         colLabelRef
                 .get()
                 .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            List<String> documentIds = new ArrayList<>();
-                            QuerySnapshot documents = task.getResult();
-                            if (documents != null) {
-                                documents.forEach(document -> {
-                                    documentIds.add(document.getId());
-                                });
-                                setLabelSpinner(documentIds);
-                            }
-                        } else {
-                            // Handle the error
-                            Log.d("FirestoreError", "Error getting documents: ", task.getException());
+                    if (task.isSuccessful()) {
+                        List<String> documentIds = new ArrayList<>();
+                        QuerySnapshot documents = task.getResult();
+                        if (documents != null) {
+                            documents.forEach(document -> {
+                                documentIds.add(document.getId());
+                            });
+                            setLabelSpinner(documentIds);
                         }
-                    });
+                    } else {
+                        // Handle the error
+                        Log.d("FirestoreError", "Error getting documents: ", task.getException());
+                    }
+                });
 
     }
 
@@ -178,66 +167,47 @@ public class AddTask extends AppCompatActivity {
         courseIDSpinner.setAdapter(adapter);
     }
 
-    // add btn
-    public void addTask(View view) {
-        startDaySpr = findViewById(R.id.spinnerStartDay);
-        startMonthSpr = findViewById(R.id.spinnerStartMonth);
-        startYearSpr = findViewById(R.id.spinnerStartYear);
-        endDaySpr = findViewById(R.id.spinnerEndDay);
-        endMonthSpr = findViewById(R.id.spinnerEndMonth);
-        endYearSpr = findViewById(R.id.spinnerEndYear);
+    private void updateDateDisplay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        String formattedDate = sdf.format(myCalendar.getTime());
 
+        TextView dateTextView = findViewById(R.id.textViewDate);
+        dateTextView.setText(formattedDate);
+    }
+
+    private String formatDate(Calendar calendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        return sdf.format(calendar.getTime());
+    }
+
+    // add btn
+    public void addEvent(View view){
         String labelID = (String) labelSpinner.getSelectedItem();
         String courseID = (String) courseIDSpinner.getSelectedItem();
-        String taskTitle = taskTitleInput.getText().toString().trim();
+        String eventName = eventNameInput.getText().toString().trim();
         String details = detailsInput.getText().toString().trim();
-        boolean switchState = reminderSwitch.isChecked();
-
-        String startDate = null;
-        String endDate = null;
-        String flag = "OFF";
-
-        // if reminder is on
-        if(switchState){
-            String startDay = (String) startDaySpr.getSelectedItem();
-            String startMonth = (String) startMonthSpr.getSelectedItem();
-            String startYear = (String) startYearSpr.getSelectedItem();
-            String endDay = (String) endDaySpr.getSelectedItem();
-            String endMonth = (String) endMonthSpr.getSelectedItem();
-            String endYear = (String) endYearSpr.getSelectedItem();
-
-            // Concatenate the strings for startDate
-            startDate = startDay + "-" + startMonth + "-" + startYear;
-            // Concatenate the strings for endDate
-            endDate = endDay + "-" + endMonth + "-" + endYear;
-            flag = "ON";
-
-        }
+        String formattedDate = (myCalendar != null) ? formatDate(myCalendar) : null;
 
         // check whether the field is empty
-        if (labelID == null || courseID == null || taskTitle.isEmpty()) {
+        if (labelID == null || courseID == null || eventName.isEmpty()) {
             // Show an error message or alert to the user
             Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
         } else {
-            // if all fields are filled, then create a Map to store
-            Map<String, Object> taskData = new HashMap<>();
-            taskData.put("taskTitle", taskTitle);
-            taskData.put("taskDetails", details);
-            taskData.put("taskStatus", "false");
-            taskData.put("reminderStatus", flag);
-            taskData.put("startDate", startDate);
-            taskData.put("endDate", endDate);
+            Map<String, Object> eventData = new HashMap<>();
+            eventData.put("eventName", eventName);
+            eventData.put("eventDetails", details);
+            eventData.put("eventDate", formattedDate);
 
-            CollectionReference colTask;
+            CollectionReference colEvent;
             docRef = colCourseRef.document(courseID);
-            colTask = docRef.collection("tasks");
-            colTask.add(taskData)
+            colEvent = docRef.collection("events");
+            colEvent.add(eventData)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(AddTask.this, "Task created successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEvent.this, "Task created successfully!", Toast.LENGTH_SHORT).show();
                         // Handler to delay starting the Specific Courses Activity
                         new Handler().postDelayed(() -> {
-                            // Back to View Course Page
-                           Intent intent = new Intent(AddTask.this, ViewEventsPage.class);
+                            // Back to View Event Page
+                           Intent intent = new Intent(AddEvent.this, ViewEventsPage.class);
                             intent.putExtra("selectedLabel", selectedLabel);
                             intent.putExtra("selectedCourseCode", courseID);
                             startActivity(intent);
@@ -245,8 +215,8 @@ public class AddTask extends AppCompatActivity {
                         }, 1000);  // Delay of 1s, enough?
 
                     })
-                    .addOnFailureListener(e -> Toast.makeText(AddTask.this, "Failed to create course: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
+                    .addOnFailureListener(e -> Toast.makeText(AddEvent.this, "Failed to create course: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 
+        }
     }
 }

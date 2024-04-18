@@ -110,7 +110,12 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
-
+        <TextView
+            android:id="@+id/textViewStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date[DD-MM-YYYY"
+            android:layout_below="@id/reminderSwitch" />
         <LinearLayout
             android:id="@+id/startDateLayout"
             android:layout_width="match_parent"
@@ -119,13 +124,7 @@
             android:visibility="gone"
             android:padding="8dp">
 
-            <TextView
-                android:id="@+id/textViewStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start from"
-                android:layout_below="@id/reminderSwitch"
-                android:layout_marginTop="20dp"/>
+
             <Spinner
                 android:id="@+id/spinnerStartDay"
                 android:layout_width="0dp"
@@ -145,6 +144,13 @@
                 android:layout_weight="1"/>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Due Date [DD-MM-YYY]"
+            android:layout_below="@id/startDateLayout"
+            />
         <LinearLayout
             android:id="@+id/endDateLayout"
             android:layout_width="match_parent"
@@ -153,13 +159,14 @@
             android:visibility="gone"
             android:padding="8dp">
 
-            <TextView
-                android:id="@+id/textViewEndDate"
-                android:layout_width="wrap_content"
+
+            <!--<Button
+                android:id="@+id/datePickerButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Due Date"
-                android:layout_below="@id/startDateLayout"
-                android:layout_marginTop="20dp"/>
+                android:layout_weight="1"
+                android:text="Select Date"
+                android:onClick="showDatePicker" />-->
             <Spinner
                 android:id="@+id/spinnerEndDay"
                 android:layout_width="0dp"
@@ -189,4 +196,6 @@
         android:layout_centerHorizontal="true"
         android:text="Add"
         android:onClick="addTask"/>
+
+
 </RelativeLayout>
