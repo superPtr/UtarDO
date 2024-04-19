@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "723783418497",
+    "project_id": "utardo-a8b05",
+    "storage_bucket": "utardo-a8b05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723783418497:android:b0413ba4735119d2ad4380",
+        "android_client_info": {
+          "package_name": "my.edu.utar.testing_assignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723783418497-frchpajst80upvdajcsctog2777qm4fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPunQXxytU38-DHir36LVos4ioPmKWucs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723783418497-frchpajst80upvdajcsctog2777qm4fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723783418497:android:83b3ce57e0f7c613ad4380",
+        "android_client_info": {
+          "package_name": "my.edu.utar.utardo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723783418497-frchpajst80upvdajcsctog2777qm4fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPunQXxytU38-DHir36LVos4ioPmKWucs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723783418497-frchpajst80upvdajcsctog2777qm4fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

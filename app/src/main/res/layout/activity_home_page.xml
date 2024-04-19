@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Username TextView -->
+        <TextView
+            android:id="@+id/username"
+            android:text="HI, JIAN"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Today's Event TextView -->
+        <TextView
+            android:id="@+id/todayevent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY's EVENT"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp" />
+
+        <!-- Event RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewEvents"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:maxHeight="400dp"/> <!-- Set maximum display area height to 400 pixels -->
+
+        <!-- Today's Task TextView -->
+        <TextView
+            android:id="@+id/todaytask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY's TASK"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <!-- Task RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:maxHeight="400dp"/> <!-- Set maximum display area height to 400 pixels -->
+
+    </LinearLayout>
+
+</RelativeLayout>
