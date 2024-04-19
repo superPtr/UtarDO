@@ -30,9 +30,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.textViewEventTitle.setText(event.getEventName());
     }
 
+//    @Override
+//    public int getItemCount() {
+//        return eventList.size();
+//    }
+
     @Override
     public int getItemCount() {
-        return eventList.size();
+        return eventList != null ? eventList.size() : 0;
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {

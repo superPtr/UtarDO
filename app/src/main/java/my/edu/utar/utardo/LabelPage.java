@@ -23,6 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,6 +59,17 @@ public class LabelPage extends BaseActivity {
 
         // Read labels from Firestore
         readLabelsFromFirestore();
+
+
+        //Bottom Navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.menu_label);
+        }
+        setupBottomNavigation();
+
+
+
     }
 
     private void addNewLabel() {
@@ -193,5 +206,64 @@ public class LabelPage extends BaseActivity {
         Intent intent = new Intent(this, ViewCoursesPage.class);
         intent.putExtra("selectedLabel", labelText);
         startActivity(intent);
+    }
+
+
+    protected void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.menu_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.menu_label) {
+                startActivity(new Intent(this, LabelPage.class));
+                return true;
+            } else if (item.getItemId() == R.id.menu_add_button) {
+                showSpinner();
+                return true;
+            } else if (item.getItemId() == R.id.menu_calendar) {
+                startActivity(new Intent(this, CalendarPage.class));
+                return true;
+            } else if (item.getItemId() == R.id.menu_settings) {
+                startActivity(new Intent(this, SettingPage.class));
+                return true;
+            }
+            return false;
+
+        });
+
+
+    }
+
+
+    private void showSpinner() {
+        // Create an array of options
+        String[] options = {"New label", "New course", "New event", "New task"};
+
+        // Create and configure the dropdown list dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(LabelPage.this);
+        builder.setTitle("Select an option");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle the selected option
+                if (which == 0) {
+                    // Redirect to the page for creating a new label
+                    startActivity(new Intent(LabelPage.this, LabelPage.class));
+                } else if (which == 1) {
+                    // Redirect to the page for creating a new course
+                    startActivity(new Intent(LabelPage.this, ViewCoursesPage.class));
+                } else if (which == 2) {
+                    // Redirect to the page for creating a new event
+                    startActivity(new Intent(LabelPage.this, ViewEventsPage.class));
+                } else if (which == 3) {
+                    // Redirect to the page for creating a new task
+                    startActivity(new Intent(LabelPage.this, ViewTasksPage.class));
+                }
+            }
+        });
+
+        // Display the dropdown list dialog
+        builder.show();
     }
 }

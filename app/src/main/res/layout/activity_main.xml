@@ -6,87 +6,95 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/accEmail"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Continue label page" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutlayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome"
-        android:layout_centerHorizontal="true"
-        android:textSize="34sp"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/accName"
-        android:layout_width="wrap_content"
+        <!-- Username and Email TextViews -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Username TextView -->
+            <TextView
+                android:id="@+id/accName"
+                android:text="name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"/>
+
+            <!-- Email TextView -->
+            <TextView
+                android:id="@+id/accEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:text="email"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <!-- Today's Event TextView -->
+        <TextView
+            android:id="@+id/todayevent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY's EVENT"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp" />
+
+        <!-- Event RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewEvents"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:maxHeight="400dp"/> <!-- Set maximum display area height to 400 pixels -->
+
+        <!-- Today's Task TextView -->
+        <TextView
+            android:id="@+id/todaytask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TODAY's TASK"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <!-- Task RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:maxHeight="400dp"/> <!-- Set maximum display area height to 400 pixels -->
+
+    </LinearLayout>
+
+
+
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="name"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="34sp"/>
-
-    <TextView
-        android:id="@+id/accEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="email"
-        android:layout_below="@id/accName"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="24sp"/>
-
-    <Button
-        android:id="@+id/homepage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/accSignout"
-        android:layout_below="@+id/accEmail"
-        android:layout_alignStart="@+id/label"
-        android:layout_alignEnd="@+id/label"
-        android:layout_marginStart="-118dp"
-        android:layout_marginTop="168dp"
-        android:layout_marginEnd="118dp"
-        android:layout_marginBottom="47dp"
-        android:text="Home Page" />
-
-    <Button
-        android:id="@+id/settingpage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/accSignout"
-        android:layout_below="@+id/accEmail"
-        android:layout_alignStart="@+id/label"
-        android:layout_alignEnd="@+id/label"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="115dp"
-        android:layout_marginEnd="-50dp"
-        android:layout_marginBottom="100dp"
-        android:text="Setting Page" />
-
-    <Button
-        android:id="@+id/calendarpage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/accSignout"
-        android:layout_below="@+id/accEmail"
-        android:layout_marginTop="103dp"
-        android:layout_marginBottom="112dp"
-        android:text="Calendar Page" />
-
-    <Button
-        android:id="@+id/accSignout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
-
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_menu" />
 
 
 

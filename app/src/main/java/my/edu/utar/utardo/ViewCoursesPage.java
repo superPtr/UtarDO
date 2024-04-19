@@ -84,6 +84,7 @@ public class ViewCoursesPage extends BaseActivity {
                 intent.putExtra("selectedLabel", selectedLabel);
                 intent.putExtra("selectedCourseCode", selectedCourseCode);
 
+
                 // Read events and tasks data from Firestore
                 //readEventsFromFirestore(selectedCourseCode, intent);
                 //readTasksFromFirestore(selectedCourseCode, intent);
@@ -180,6 +181,7 @@ public class ViewCoursesPage extends BaseActivity {
 //                    Log.e(TAG, "Error reading tasks from Firestore: ", e);
 //                });
 //    }
+
 
     // Method to handle add course event
     private void handleAddCourse(String labelText) {

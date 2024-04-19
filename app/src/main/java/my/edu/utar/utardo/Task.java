@@ -105,6 +105,5 @@ public class Task implements Parcelable {
         dest.writeString(reminderStatus);
         dest.writeString(startDate);
         dest.writeString(endDate);
-
     }
 }

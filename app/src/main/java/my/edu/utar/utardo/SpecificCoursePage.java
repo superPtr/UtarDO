@@ -23,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,10 +104,6 @@ public class SpecificCoursePage extends AppCompatActivity {
                 handleAddTask(selectedLabel, selectedCourseCode);
             }
         });
-
-
-
-
     }
 
     private void retrieveCourseDetails(String selectedCourseCode, String selectedLabel) {
@@ -185,6 +180,7 @@ public class SpecificCoursePage extends AppCompatActivity {
     }
 
     private void retrieveTasks(String selectedCourseCode, String selectedLabel) {
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userEmail = null;
