@@ -1,5 +1,6 @@
 package my.edu.utar.utardo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +15,15 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +51,7 @@ public class SpecificCoursePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_course_page);
+
         db = FirebaseFirestore.getInstance();
         leftBack = findViewById(R.id.leftBack);
         courseId = findViewById(R.id.courseId);
@@ -53,8 +60,17 @@ public class SpecificCoursePage extends AppCompatActivity {
         addTasksButton = findViewById(R.id.addTasksBtn);
         eventsContainer = findViewById(R.id.eventsContainer);
         tasksContainer = findViewById(R.id.tasksContainer);
+
         recyclerViewEvents = findViewById(R.id.recyclerViewEvents);
+        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
+        recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
+
+        eventAdapter = new EventAdapter(eventList);
+        taskAdapter = new TaskAdapter(taskList);
+
+
+        // adapter set up
 
         leftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,21 +79,25 @@ public class SpecificCoursePage extends AppCompatActivity {
             }
         });
 
-
         selectedCourseCode = getIntent().getStringExtra("selectedCourseCode");
         selectedLabel = getIntent().getStringExtra("selectedLabel");
 
-        //retrieveCourseDetails(selectedCourseCode, selectedLabel);
-        //retrieveEvents(selectedCourseCode, selectedLabel);
-        //retrieveTasks(selectedCourseCode, selectedLabel);
+        retrieveCourseDetails(selectedCourseCode, selectedLabel);
+        retrieveEvents(selectedCourseCode, selectedLabel);
+        retrieveTasks(selectedCourseCode, selectedLabel);
+
+        recyclerViewEvents.setAdapter(eventAdapter);
+        recyclerViewTasks.setAdapter(taskAdapter);
+
+        // set click listener to add Event buttoon
         addEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add new task
+                // Add new event
                 handleAddEvent(selectedLabel, selectedCourseCode);
             }
         });
-        // Set click listener for add course button
+        // Set click listener for add Task button
         addTasksButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,12 +106,9 @@ public class SpecificCoursePage extends AppCompatActivity {
             }
         });
 
-        eventAdapter = new EventAdapter(eventList);
-        recyclerViewEvents.setAdapter(eventAdapter);
-        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter = new TaskAdapter(taskList);
-        recyclerViewTasks.setAdapter(taskAdapter);
-        recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
+
+
+
     }
 
     private void retrieveCourseDetails(String selectedCourseCode, String selectedLabel) {
@@ -144,17 +161,23 @@ public class SpecificCoursePage extends AppCompatActivity {
         db.collection("users")
                 .document(userEmail).collection("labels").document(selectedLabel).collection("courses").document(selectedCourseCode).collection("events")
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Event> eventsList = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        String eventName = document.getString("eventName");
-                        String eventDetails = document.getString("eventDetails");
-                        String eventDate = document.getString("eventDate");
-                        eventsList.add(new Event(eventName, eventDetails, eventDate));
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            eventList.clear();
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                String eventName = (String) document.getString("eventName");
+                                String eventDetails = (String) document.getString("eventDetails");
+                                String eventDate = document.getString("eventDate");
+                                Log.d(TAG, "Event added: Name=" + eventName + ", Details=" + eventDetails + ", Date=" + eventDate);
+                                eventList.add(new Event(eventName, eventDetails, eventDate));
+                            }
+                            eventAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.d(TAG, "No such document");
+                        }
                     }
-                    eventList.clear();
-                    eventList.addAll(eventsList);
-                    eventAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error retrieving events: ", e);
@@ -162,7 +185,6 @@ public class SpecificCoursePage extends AppCompatActivity {
     }
 
     private void retrieveTasks(String selectedCourseCode, String selectedLabel) {
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userEmail = null;
@@ -180,22 +202,31 @@ public class SpecificCoursePage extends AppCompatActivity {
         db.collection("users")
                 .document(userEmail).collection("labels").document(selectedLabel).collection("courses").document(selectedCourseCode).collection("tasks")
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Task> tasksList = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        String taskTitle = document.getString("taskTitle");
-                        String taskDetails = document.getString("taskDetails");
-                        boolean done = document.getBoolean("done");
-                        // Assuming endDate is stored as Timestamp in Firestore
-                        Date endDate = document.getTimestamp("endDate").toDate();
-                        tasksList.add(new Task(taskTitle, taskDetails, done, endDate));
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            taskList.clear();
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                String taskTitle = (String) document.getString("taskTitle");
+                                String taskDetails = (String) document.getString("taskDetails");
+                                String taskStatus = (String) document.getString("taskStatus");
+                                String reminderStatus = (String) document.getString("reminderStatus");
+                                String startDateString = (String) document.getString("startDate");
+                                String endDateString = (String) document.getString("endDate");
+                                Log.d(TAG, "Task added: Title=" + taskTitle + ", Details=" + taskDetails + ", Status=" + taskStatus +
+                                        ", ReminderStatus=" + reminderStatus + ", StartDate=" + startDateString + ", EndDate=" + endDateString);
+
+                                taskList.add(new Task(taskTitle, taskDetails, taskStatus, reminderStatus, startDateString, endDateString));
+                            }
+                            Log.d(TAG, "Task list size: " + taskList.size());
+                            Log.d(TAG, "notifyDataSetChanged called");
+                            taskAdapter.notifyDataSetChanged();
+                        }
                     }
-                    taskList.clear();
-                    taskList.addAll(tasksList);
-                    taskAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error retrieving tasks: ", e);
+                    Log.e(TAG, "Error retrieving events: ", e);
                 });
     }
 

@@ -6,23 +6,30 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Task implements Parcelable {
-    private String title;
-    private String details;
-    private Date endDate;
-    private boolean done;
+    private String tasktitle;
+    private String taskDetails;
+    private String taskStatus;
+    private String reminderStatus;
+    private String startDate;
+    private String endDate;
 
-    public Task(String title, String details, boolean done, Date endDate) {
-        this.title = title;
-        this.details = details;
+    public Task(String title, String details, String taskStatus, String reminderStatus, String startDate, String endDate) {
+        this.tasktitle = title;
+        this.taskDetails = details;
+        this.taskStatus = taskStatus;
+        this.reminderStatus = reminderStatus;
+        this.startDate = startDate;
         this.endDate = endDate;
-        this.done = done;
+
     }
 
     protected Task(Parcel in) {
-        title = in.readString();
-        details = in.readString();
-        endDate = new Date(in.readLong());
-        done = in.readByte() != 0;
+        tasktitle = in.readString();
+        taskDetails = in.readString();
+        taskStatus = in.readString();
+        reminderStatus = in.readString();
+        startDate = in.readString();
+        endDate = in.readString();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -38,35 +45,51 @@ public class Task implements Parcelable {
     };
 
     public String getTitle() {
-        return title;
+        return tasktitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.tasktitle = title;
     }
 
     public String getDetails() {
-        return details;
+        return taskDetails;
     }
 
     public void setDetails(String details) {
-        this.details = details;
+        this.taskDetails = details;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public boolean isDone() {
-        return done;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
+    public String getReminderStatus() {
+        return reminderStatus;
+    }
+
+    public void setReminderStatus(String reminderStatus) {
+        this.reminderStatus = reminderStatus;
     }
 
     @Override
@@ -76,9 +99,12 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(details);
-        dest.writeLong(endDate.getTime());
-        dest.writeByte((byte) (done ? 1 : 0));
+        dest.writeString(tasktitle);
+        dest.writeString(taskDetails);
+        dest.writeString(taskStatus);
+        dest.writeString(reminderStatus);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
+
     }
 }

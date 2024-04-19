@@ -82,7 +82,7 @@ public class ViewCoursesPage extends BaseActivity {
                 // Start SpecificCoursePage activity with the selected course code
                 Intent intent = new Intent(ViewCoursesPage.this, SpecificCoursePage.class);
                 intent.putExtra("selectedLabel", selectedLabel);
-                intent.putExtra("selectedCourseCode", course.getDocumentId());
+                intent.putExtra("selectedCourseCode", selectedCourseCode);
 
                 // Read events and tasks data from Firestore
                 //readEventsFromFirestore(selectedCourseCode, intent);
@@ -155,31 +155,31 @@ public class ViewCoursesPage extends BaseActivity {
                 });
     }
 
-    private void readTasksFromFirestore(String selectedCourseCode, Intent intent) {
-        FirebaseFirestore.getInstance().collection("courses")
-                .document(selectedCourseCode)
-                .collection("tasks")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    ArrayList<Task> tasksList = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        String taskTitle = document.getString("taskTitle");
-                        String taskDetails = document.getString("taskDetails");
-                        boolean taskStatus = document.getBoolean("taskStatus");
-                        Date endDate = document.getDate("endDate");
-                        Task task = new Task(taskTitle, taskDetails, taskStatus, endDate);
-                        tasksList.add(task);
-                    }
-                    // Pass tasks data to the intent
-                    intent.putParcelableArrayListExtra("tasksList", tasksList);
-
-                    // Start activity with the intent
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error reading tasks from Firestore: ", e);
-                });
-    }
+//    private void readTasksFromFirestore(String selectedCourseCode, Intent intent) {
+//        FirebaseFirestore.getInstance().collection("courses")
+//                .document(selectedCourseCode)
+//                .collection("tasks")
+//                .get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    ArrayList<Task> tasksList = new ArrayList<>();
+//                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+//                        String taskTitle = document.getString("taskTitle");
+//                        String taskDetails = document.getString("taskDetails");
+//                        boolean taskStatus = document.getBoolean("taskStatus");
+//                        Date endDate = document.getDate("endDate");
+//                        Task task = new Task(taskTitle, taskDetails, taskStatus, endDate);
+//                        tasksList.add(task);
+//                    }
+//                    // Pass tasks data to the intent
+//                    intent.putParcelableArrayListExtra("tasksList", tasksList);
+//
+//                    // Start activity with the intent
+//                    startActivity(intent);
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e(TAG, "Error reading tasks from Firestore: ", e);
+//                });
+//    }
 
     // Method to handle add course event
     private void handleAddCourse(String labelText) {

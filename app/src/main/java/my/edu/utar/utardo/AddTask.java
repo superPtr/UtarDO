@@ -199,12 +199,12 @@ public class AddTask extends AppCompatActivity {
 
         // if reminder is on
         if(switchState){
-            String startDay = (String) startDaySpr.getSelectedItem();
-            String startMonth = (String) startMonthSpr.getSelectedItem();
-            String startYear = (String) startYearSpr.getSelectedItem();
-            String endDay = (String) endDaySpr.getSelectedItem();
-            String endMonth = (String) endMonthSpr.getSelectedItem();
-            String endYear = (String) endYearSpr.getSelectedItem();
+            String startDay = String.valueOf(startDaySpr.getSelectedItem());
+            String startMonth = String.valueOf(startMonthSpr.getSelectedItem());
+            String startYear = String.valueOf(startYearSpr.getSelectedItem());
+            String endDay = String.valueOf(endDaySpr.getSelectedItem());
+            String endMonth = String.valueOf(endMonthSpr.getSelectedItem());
+            String endYear = String.valueOf(endYearSpr.getSelectedItem());
 
             // Concatenate the strings for startDate
             startDate = startDay + "-" + startMonth + "-" + startYear;
@@ -223,7 +223,7 @@ public class AddTask extends AppCompatActivity {
             Map<String, Object> taskData = new HashMap<>();
             taskData.put("taskTitle", taskTitle);
             taskData.put("taskDetails", details);
-            taskData.put("taskStatus", "false");
+            taskData.put("taskStatus", "Pending");
             taskData.put("reminderStatus", flag);
             taskData.put("startDate", startDate);
             taskData.put("endDate", endDate);

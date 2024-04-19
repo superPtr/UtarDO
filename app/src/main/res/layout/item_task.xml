@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@drawable/task_box_background">
+    android:background="@drawable/task_box_background"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textViewTaskTitle"
@@ -15,12 +16,27 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Checkbox to mark task as done -->
+    <TextView
+        android:id="@+id/textViewTaskDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTaskTitle"
+        android:text="Task Details"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textViewTaskStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTaskDetails"
+        android:text="Task Status"
+        android:layout_marginTop="4dp"/>
+
     <CheckBox
         android:id="@+id/checkboxDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTaskTitle"
+        android:layout_below="@id/textViewTaskStatus"
         android:layout_marginTop="8dp"
         android:layout_alignParentEnd="true" />
 

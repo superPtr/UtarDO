@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -47,12 +49,13 @@ public class ViewTasksPage extends AppCompatActivity {
         recyclerViewTasks.setAdapter(taskAdapter);
 
         // Get course code and name passed from previous activity
-        String courseCode = getIntent().getStringExtra("courseCode");
+        String selectedLabel = getIntent().getStringExtra("selectedLabel");
+        String selectedCourse = getIntent().getStringExtra("selectedCourse");
         String courseName = getIntent().getStringExtra("courseName");
-        courseCodeName.setText(courseCode + " - " + courseName);
+        courseCodeName.setText(selectedCourse + " - " + courseName);
 
         // Retrieve tasks related to the course from Firestore
-        retrieveTasksFromFirestore(courseCode);
+        retrieveTasksFromFirestore(selectedLabel, selectedCourse);
 
         // Handle back button click
         leftBack.setOnClickListener(new View.OnClickListener() {
@@ -63,10 +66,17 @@ public class ViewTasksPage extends AppCompatActivity {
         });
     }
 
-    private void retrieveTasksFromFirestore(String courseCode) {
+    private void retrieveTasksFromFirestore(String selectedLabel, String selectedCourse) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("courses")
-                .document(courseCode)
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userEmail = currentUser != null ? currentUser.getEmail() : null;
+        db.collection("users")
+                .document(userEmail)
+                .collection("labels")
+                .document(selectedLabel)
+                .collection("courses")
+                .document(selectedCourse)
                 .collection("tasks")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -74,17 +84,16 @@ public class ViewTasksPage extends AppCompatActivity {
                         taskList.clear();
                         for (DocumentSnapshot document : task.getResult()) {
                             Task taskItem = document.toObject(Task.class);
-                            if (!taskItem.isDone()) { // Only add tasks that are not done
+                            // Assuming "Pending" is the status for not done tasks
+                            if ("Pending".equals(taskItem.getTaskStatus())) {
                                 taskList.add(taskItem);
                             }
                         }
-                        // Sort tasks by endDate
+                        // Sort tasks by endDate, assuming endDate is a String
                         Collections.sort(taskList, new Comparator<Task>() {
                             @Override
                             public int compare(Task task1, Task task2) {
-                                Date endDate1 = task1.getEndDate();
-                                Date endDate2 = task2.getEndDate();
-                                return endDate1.compareTo(endDate2);
+                                return task1.getEndDate().compareTo(task2.getEndDate());
                             }
                         });
                         // Notify adapter about the data change
