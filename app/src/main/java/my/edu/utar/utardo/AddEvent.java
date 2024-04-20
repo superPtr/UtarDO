@@ -203,11 +203,11 @@ public class AddEvent extends AppCompatActivity {
             colEvent = docRef.collection("events");
             colEvent.add(eventData)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(AddEvent.this, "Task created successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEvent.this, "Event created successfully!", Toast.LENGTH_SHORT).show();
                         // Handler to delay starting the Specific Courses Activity
                         new Handler().postDelayed(() -> {
                             // Back to View Event Page
-                           Intent intent = new Intent(AddEvent.this, ViewEventsPage.class);
+                           Intent intent = new Intent(AddEvent.this, SpecificCoursePage.class);
                             intent.putExtra("selectedLabel", selectedLabel);
                             intent.putExtra("selectedCourseCode", courseID);
                             startActivity(intent);

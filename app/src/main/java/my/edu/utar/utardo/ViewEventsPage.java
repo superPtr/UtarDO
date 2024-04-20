@@ -9,10 +9,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +30,20 @@ public class ViewEventsPage extends AppCompatActivity {
     private EventAdapter eventsAdapter;
     private TextView courseInfo;
     private ImageView leftBack;
-    private String courseCode;
-    private String courseName;
+    private String selectedCourseCode, selectedLabel;
+    private FirebaseFirestore db;
+    private List<Event> eventList = new ArrayList<>();
+    private EventAdapter eventAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_events_page);
+
+        db = FirebaseFirestore.getInstance();
+
+        selectedCourseCode = getIntent().getStringExtra("selectedCourseCode");
+        selectedLabel = getIntent().getStringExtra("selectedLabel");
 
         recyclerViewEvents = findViewById(R.id.recyclerViewEvents);
         courseInfo = findViewById(R.id.courseInfo);
@@ -47,32 +60,50 @@ public class ViewEventsPage extends AppCompatActivity {
             }
         });
 
-        courseCode = getIntent().getStringExtra("courseCode");
-        courseName = getIntent().getStringExtra("courseName");
-        courseInfo.setText(courseCode + " - " + courseName);
+        courseInfo.setText(selectedCourseCode);
 
-        retrieveEvents(courseCode);
+        retrieveEvents(selectedCourseCode, selectedLabel);
     }
 
-    private void retrieveEvents(String courseCode) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events")
-                .whereEqualTo("courseCode", courseCode)
+    private void retrieveEvents(String selectedCourseCode, String selectedLabel) {
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userEmail = null;
+        if (currentUser != null) {
+            userEmail = currentUser.getEmail();
+
+        } else {
+            GoogleSignInAccount googleAcc = GoogleSignIn.getLastSignedInAccount(this);
+            if (googleAcc != null) {
+                userEmail = googleAcc.getEmail();
+
+            }
+        }
+
+        db.collection("users")
+                .document(userEmail).collection("labels").document(selectedLabel).collection("courses").document(selectedCourseCode).collection("events")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<Event> events = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Event event = document.toObject(Event.class);
-                                events.add(event);
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            eventList.clear();
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                String eventName = (String) document.getString("eventName");
+                                String eventDetails = (String) document.getString("eventDetails");
+                                String eventDate = document.getString("eventDate");
+                                Log.d(TAG, "Event added: Name=" + eventName + ", Details=" + eventDetails + ", Date=" + eventDate);
+                                eventList.add(new Event(eventName, eventDetails, eventDate));
                             }
-                            eventsAdapter.setEvents(events);
-                        } else {
-                            Log.d(TAG, "Error getting events: ", task.getException());
+                            eventAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.d(TAG, "No such document");
                         }
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error retrieving events: ", e);
                 });
     }
 }

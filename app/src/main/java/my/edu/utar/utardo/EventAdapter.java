@@ -11,6 +11,7 @@ import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> eventList;
+    private OnItemClickListener listener;
 
     public EventAdapter(List<Event> eventList) {
         this.eventList = eventList;
@@ -28,16 +29,29 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         holder.textViewEventTitle.setText(event.getEventName());
-    }
 
-//    @Override
-//    public int getItemCount() {
-//        return eventList.size();
-//    }
+        // Set click listener
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(event);
+                }
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
         return eventList != null ? eventList.size() : 0;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Event event);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {

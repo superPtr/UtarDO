@@ -33,7 +33,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends BaseActivity {
 
@@ -49,6 +53,8 @@ public class MainActivity extends BaseActivity {
     private RecyclerView recyclerViewTasks;
     private EventAdapter eventAdapter;
     private TaskAdapter taskAdapter;
+    private List<Event> eventList = new ArrayList<>();
+    private FirebaseFirestore db;
 
 
     @Override
@@ -66,6 +72,19 @@ public class MainActivity extends BaseActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userEmail = null;
+        if (currentUser != null) {
+            userEmail = currentUser.getEmail();
+
+        } else {
+            GoogleSignInAccount googleAcc = GoogleSignIn.getLastSignedInAccount(this);
+            if (googleAcc != null) {
+                userEmail = googleAcc.getEmail();
+
+            }
+        }
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -84,7 +103,6 @@ public class MainActivity extends BaseActivity {
             displayGoogleAccountDetails(account);
         } else {
             // If not signed in with Google, check Firebase authentication
-            FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
                 // If signed in with email/password, display Firebase user details
                 displayFirebaseUserDetails(currentUser);
@@ -98,14 +116,19 @@ public class MainActivity extends BaseActivity {
 
         // Initialize RecyclerViews
         recyclerViewEvents = findViewById(R.id.recyclerViewEvents);
-        recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
+        //recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
 
         // Set layout managers and adapters
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewEvents.setAdapter(eventAdapter);
-        recyclerViewTasks.setAdapter(taskAdapter);
+        //recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
 
+        eventAdapter = new EventAdapter(eventList);
+
+        //recyclerViewTasks.setAdapter(taskAdapter);
+
+        Log.d("HomePage", "user email: " + userEmail);
+        retrieveTodayEvents(userEmail);
+        recyclerViewEvents.setAdapter(eventAdapter);
 
     }
     private void displayFirebaseUserDetails(FirebaseUser user) {
@@ -224,5 +247,74 @@ public class MainActivity extends BaseActivity {
 
         // Display the dropdown list dialog
         builder.show();
+    }
+
+    private void retrieveTodayEvents(String userEmail) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String todayDate = sdf.format(new Date());
+        ArrayList<String> labelDocumentIds = new ArrayList<>();
+        ArrayList<String> courseDocumentIds = new ArrayList<>();
+        ArrayList<String> eventDocumentIds = new ArrayList<>();
+        Log.d("HomePage", "today date = " + todayDate );
+
+        // using bad method for trying to retrieve
+        db.collection("users")
+                .document(userEmail).collection("labels")
+                .get()
+                .addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        task1.getResult().forEach(document -> {
+                            Log.d("HomePage", "label id = " + document.getId() );
+                            labelDocumentIds.add(document.getId());
+                        });
+
+                        for (String labelId : labelDocumentIds) {
+                            db.collection("users")
+                                    .document(userEmail).collection("labels").document(labelId).collection("courses")
+                                    .get()
+                                    .addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            task2.getResult().forEach(document -> {
+                                                courseDocumentIds.add(document.getId());
+                                            });
+
+                                            for (String courseId : courseDocumentIds) {
+                                                Log.d("HomePage", "course id = " + courseId );
+                                                db.collection("users")
+                                                        .document(userEmail).collection("labels").document(labelId).collection("courses").document(courseId).collection("events")
+                                                        .get()
+                                                        .addOnCompleteListener(task3 -> {
+                                                            if (task3.isSuccessful()) {
+                                                                task3.getResult().forEach(document -> {
+                                                                    eventDocumentIds.add(document.getId());
+                                                                });
+                                                                eventList.clear();
+                                                                Log.d("HomePage", "still work" );
+                                                                for (String eventId : eventDocumentIds) {
+                                                                    Log.d("HomePage", "event id = " + eventId );
+                                                                    db.collection("users")
+                                                                            .document(userEmail).collection("labels").document(labelId).collection("courses").document(courseId).collection("events").document(eventId)
+                                                                            .get()
+                                                                            .addOnSuccessListener(documentSnapshot -> {
+                                                                                String eventDate = documentSnapshot.getString("eventDate");
+                                                                                if (eventDate != null && eventDate.equals(todayDate)) {
+                                                                                    String eventName = (String) documentSnapshot.getString("eventName");
+                                                                                    String eventDetails = (String) documentSnapshot.getString("eventDetails");
+                                                                                    Log.d("HomePage", "Event added: Name=" + eventName + ", Details=" + eventDetails + ", Date=" + eventDate);
+                                                                                    eventList.add(new Event(eventName, eventDetails, eventDate));
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(e -> System.err.println("Error fetching event document: " + e.getMessage()));
+                                                                }
+                                                                eventAdapter.notifyDataSetChanged();
+                                                            }
+                                                        });
+                                            }
+
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 }
