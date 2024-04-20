@@ -238,7 +238,7 @@ public class LabelPage extends BaseActivity {
 
     private void showSpinner() {
         // Create an array of options
-        String[] options = {"New label", "New course", "New event", "New task"};
+        String[] options = {"View label", "View course", "View event", "View task", "New Event", "New Task"};
 
         // Create and configure the dropdown list dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(LabelPage.this);
@@ -259,6 +259,12 @@ public class LabelPage extends BaseActivity {
                 } else if (which == 3) {
                     // Redirect to the page for creating a new task
                     startActivity(new Intent(LabelPage.this, ViewTasksPage.class));
+                } else if (which == 4) {
+                    // Redirect to the page for creating a new task
+                    startActivity(new Intent(LabelPage.this, AddEvent.class));
+                } else if (which == 5) {
+                    // Redirect to the page for creating a new task
+                    startActivity(new Intent(LabelPage.this, AddTask.class));
                 }
             }
         });

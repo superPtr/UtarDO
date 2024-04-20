@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -66,46 +67,16 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/buttonHome"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:src="@drawable/setting"
-            android:background="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/buttonLabels"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:src="@drawable/setting"
-            android:background="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/addButton"
-            android:layout_width="20dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_add"
-            android:background="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/buttonCalendar"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:src="@drawable/setting"
-            android:background="@color/primary"/>
-
-        <ImageButton
-            android:id="@+id/buttonSettings"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:src="@drawable/setting"
-            android:background="@color/primary"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation_menu" />
 
     </LinearLayout>
+
+
+
 
 </RelativeLayout>

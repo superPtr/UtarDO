@@ -160,7 +160,7 @@ public class SettingPage extends AppCompatActivity {
 
     private void showSpinner() {
         // Create an array of options
-        String[] options = {"New label", "New course", "New event", "New task"};
+        String[] options = {"View label", "View course", "View event", "View task", "New Event", "New Task"};
 
         // Create and configure the dropdown list dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingPage.this);
@@ -181,6 +181,12 @@ public class SettingPage extends AppCompatActivity {
                 } else if (which == 3) {
                     // Redirect to the page for creating a new task
                     startActivity(new Intent(SettingPage.this, ViewTasksPage.class));
+                } else if (which == 4) {
+                    // Redirect to the page for creating a new task
+                    startActivity(new Intent(SettingPage.this, AddEvent.class));
+                } else if (which == 5) {
+                    // Redirect to the page for creating a new task
+                    startActivity(new Intent(SettingPage.this, AddTask.class));
                 }
             }
         });
