@@ -52,7 +52,6 @@
     </RelativeLayout>
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCourses"
         android:layout_width="match_parent"
@@ -75,8 +74,4 @@
             app:menu="@menu/bottom_navigation_menu" />
 
     </LinearLayout>
-
-
-
-
 </RelativeLayout>

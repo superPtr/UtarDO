@@ -69,7 +69,6 @@ public class ViewCoursesPage extends BaseActivity {
         labelName.setText(selectedLabel);
         Log.d(TAG, "Selected label: " + selectedLabel);
 
-        recyclerViewCourses = findViewById(R.id.recyclerViewCourses);
         recyclerViewCourses.setLayoutManager(new GridLayoutManager(this, 3));
 
         coursesAdapter = new CoursesAdapter(coursesList);

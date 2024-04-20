@@ -22,8 +22,8 @@
             motion:layout_constraintVertical_bias="0.499"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            android:rotationX="10"
-            android:rotationY="10" />
+            android:scaleX="10"
+            android:scaleY="10" />
         <Constraint
             android:id="@+id/utarDoLogo"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +34,7 @@
             motion:layout_constraintStart_toStartOf="parent"
             android:scaleX="0"
             android:scaleY="0"
-            android:alpha="1" />
+            android:alpha="0" />
         <Constraint
             android:id="@+id/secondutarDoLogo"
             motion:layout_constraintEnd_toEndOf="parent"
