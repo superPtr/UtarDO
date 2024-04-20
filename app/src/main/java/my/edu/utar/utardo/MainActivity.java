@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity {
 
     private void showSpinner() {
         // Create an array of options
-        String[] options = {"View label", "View course", "View event", "View task", "New Event", "New Task"};
+        String[] options = {"Add Event", "Add Task"};
 
         // Create and configure the dropdown list dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -231,21 +231,9 @@ public class MainActivity extends BaseActivity {
                 // Handle the selected option
                 if (which == 0) {
                     // Redirect to the page for creating a new label
-                    startActivity(new Intent(MainActivity.this, LabelPage.class));
+                    startActivity(new Intent(MainActivity.this, AddEvent.class));
                 } else if (which == 1) {
                     // Redirect to the page for creating a new course
-                    startActivity(new Intent(MainActivity.this, ViewCoursesPage.class));
-                } else if (which == 2) {
-                    // Redirect to the page for creating a new event
-                    startActivity(new Intent(MainActivity.this, ViewEventsPage.class));
-                } else if (which == 3) {
-                    // Redirect to the page for creating a new task
-                    startActivity(new Intent(MainActivity.this, ViewTasksPage.class));
-                } else if (which == 4) {
-                    // Redirect to the page for creating a new task
-                    startActivity(new Intent(MainActivity.this, AddEvent.class));
-                } else if (which == 5) {
-                    // Redirect to the page for creating a new task
                     startActivity(new Intent(MainActivity.this, AddTask.class));
                 }
             }
