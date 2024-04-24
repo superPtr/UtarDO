@@ -34,8 +34,8 @@ public class SpecificCoursePage extends AppCompatActivity {
     private ImageView leftBack;
     private TextView courseId;
     private TextView title;
-    private Button addEventsButton;
-    private Button addTasksButton;
+    private Button addEventsButton, viewEventButton;
+    private Button addTasksButton, viewTaskButton;
     private LinearLayout eventsContainer;
     private LinearLayout tasksContainer;
     private String selectedCourseCode, selectedLabel;
@@ -57,6 +57,8 @@ public class SpecificCoursePage extends AppCompatActivity {
         title = findViewById(R.id.title);
         addEventsButton = findViewById(R.id.addEventsButton);
         addTasksButton = findViewById(R.id.addTasksBtn);
+        viewEventButton = findViewById(R.id.viewEventsButton);
+        viewTaskButton = findViewById(R.id.viewTasksButton);
         eventsContainer = findViewById(R.id.eventsContainer);
         tasksContainer = findViewById(R.id.tasksContainer);
 
@@ -102,6 +104,22 @@ public class SpecificCoursePage extends AppCompatActivity {
             public void onClick(View v) {
                 // Add new task
                 handleAddTask(selectedLabel, selectedCourseCode);
+            }
+        });
+        // Set click listener for add Task button
+        viewEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // View Event
+                handleViewEvent(selectedLabel, selectedCourseCode);
+            }
+        });
+        // Set click listener for add Task button
+        viewTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // View Task
+                handleViewTask(selectedLabel, selectedCourseCode);
             }
         });
     }
@@ -202,6 +220,7 @@ public class SpecificCoursePage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
+                            Log.d("BeforeAdapter", "List is " + (taskList == null ? "null" : "not null"));
                             taskList.clear();
                             for(QueryDocumentSnapshot document : task.getResult()) {
                                 String taskTitle = (String) document.getString("taskTitle");
@@ -217,7 +236,9 @@ public class SpecificCoursePage extends AppCompatActivity {
                             }
                             Log.d(TAG, "Task list size: " + taskList.size());
                             Log.d(TAG, "notifyDataSetChanged called");
-                            taskAdapter.notifyDataSetChanged();
+                            //taskAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "sizeeeeeeee:" + taskList.size());
+                            taskAdapter.setTaskList(taskList);
                         }
                     }
                 })
@@ -235,6 +256,20 @@ public class SpecificCoursePage extends AppCompatActivity {
 
     private void handleAddEvent(String labelText, String selectedCourseCode) {
         Intent intent = new Intent(this, AddEvent.class);
+        intent.putExtra("selectedLabel", labelText);
+        intent.putExtra("selectedCourseCode", selectedCourseCode);
+        startActivity(intent);
+    }
+
+    private void handleViewEvent(String labelText, String selectedCourseCode) {
+        Intent intent = new Intent(this, ViewEventsPage.class);
+        intent.putExtra("selectedLabel", labelText);
+        intent.putExtra("selectedCourseCode", selectedCourseCode);
+        startActivity(intent);
+    }
+
+    private void handleViewTask(String labelText, String selectedCourseCode) {
+        Intent intent = new Intent(this, ViewTasksPage.class);
         intent.putExtra("selectedLabel", labelText);
         intent.putExtra("selectedCourseCode", selectedCourseCode);
         startActivity(intent);

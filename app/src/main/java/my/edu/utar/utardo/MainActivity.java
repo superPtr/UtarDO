@@ -291,16 +291,20 @@ public class MainActivity extends BaseActivity {
                                                                             .get()
                                                                             .addOnSuccessListener(documentSnapshot -> {
                                                                                 String eventDate = documentSnapshot.getString("eventDate");
+                                                                                Log.d("HomePage", "Dateeee: " + eventDate + "/////" + todayDate);
                                                                                 if (eventDate != null && eventDate.equals(todayDate)) {
                                                                                     String eventName = (String) documentSnapshot.getString("eventName");
                                                                                     String eventDetails = (String) documentSnapshot.getString("eventDetails");
                                                                                     Log.d("HomePage", "Event added: Name=" + eventName + ", Details=" + eventDetails + ", Date=" + eventDate);
                                                                                     eventList.add(new Event(eventName, eventDetails, eventDate));
+                                                                                    Log.d("HomePage", "Event list:::::??" + eventList.size());
+                                                                                    eventAdapter.setEvents(eventList);
                                                                                 }
                                                                             })
                                                                             .addOnFailureListener(e -> System.err.println("Error fetching event document: " + e.getMessage()));
                                                                 }
-                                                                eventAdapter.notifyDataSetChanged();
+                                                                Log.d("HomePage", "Event list:::::" + eventList.size());
+
                                                             }
                                                         });
                                             }

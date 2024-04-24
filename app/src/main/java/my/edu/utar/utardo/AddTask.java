@@ -237,7 +237,7 @@ public class AddTask extends AppCompatActivity {
                         // Handler to delay starting the Specific Courses Activity
                         new Handler().postDelayed(() -> {
                             // Back to View Course Page
-                           Intent intent = new Intent(AddTask.this, SpecificCoursePage.class);
+                           Intent intent = new Intent(AddTask.this, ViewTasksPage.class);
                             intent.putExtra("selectedLabel", selectedLabel);
                             intent.putExtra("selectedCourseCode", courseID);
                             startActivity(intent);

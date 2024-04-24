@@ -71,6 +71,15 @@
             android:text="add"
             android:onClick="addEvent"/>
 
+        <!-- View Events Button -->
+        <Button
+            android:id="@+id/viewEventsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/addEventsButton"
+            android:text="View"
+            android:onClick="viewEvent"/>
+
         <!-- Events Container -->
         <LinearLayout
             android:id="@+id/eventsContainer"
@@ -118,6 +127,15 @@
             android:layout_alignParentEnd="true"
             android:text="add"
             android:onClick="addTask"/>
+
+        <!-- View Tasks Button -->
+        <Button
+            android:id="@+id/viewTasksButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/addTasksBtn"
+            android:text="View"
+            android:onClick="viewTask"/>
 
         <!-- Tasks Container -->
         <LinearLayout

@@ -42,24 +42,62 @@
         </LinearLayout>
 
         <!-- Today's Event TextView -->
-        <TextView
-            android:id="@+id/todayevent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TODAY's EVENT"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="10dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/textViewEventTitle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="TODAY's EVENT"-->
+<!--            android:textSize="18sp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginLeft="10dp" />-->
 
-        <!-- Event RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewEvents"
+<!--        &lt;!&ndash; Event RecyclerView &ndash;&gt;-->
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerViewEvents"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="4"-->
+<!--            android:padding="8dp"-->
+<!--            android:layout_margin="8dp"-->
+<!--            android:maxHeight="400dp"/> &lt;!&ndash; Set maximum display area height to 400 pixels &ndash;&gt;-->
+        <!-- Events Section -->
+        <RelativeLayout
+            android:id="@+id/eventsSection"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:padding="8dp"
-            android:layout_margin="8dp"
-            android:maxHeight="400dp"/> <!-- Set maximum display area height to 400 pixels -->
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topBar"
+            android:layout_marginTop="10dp"
+            android:padding="16dp">
+
+            <!-- Events Title -->
+            <TextView
+                android:id="@+id/eventsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today's Events"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Events Container -->
+            <LinearLayout
+                android:id="@+id/eventsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventsTitle"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical" />
+
+            <!-- Events RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventsContainer"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical" />
+        </RelativeLayout>
 
         <!-- Today's Task TextView -->
         <TextView

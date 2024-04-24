@@ -14,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,9 +57,9 @@ public class ViewTasksPage extends AppCompatActivity {
 
         // Get course code and name passed from previous activity
         String selectedLabel = getIntent().getStringExtra("selectedLabel");
-        String selectedCourse = getIntent().getStringExtra("selectedCourse");
+        String selectedCourse = getIntent().getStringExtra("selectedCourseCode");
         String courseName = getIntent().getStringExtra("courseName");
-        courseCodeName.setText(selectedCourse + " - " + courseName);
+        courseCodeName.setText(selectedCourse);
 
         // Retrieve tasks related to the course from Firestore
         retrieveTasksFromFirestore(selectedLabel, selectedCourse);
@@ -93,23 +96,37 @@ public class ViewTasksPage extends AppCompatActivity {
                     .document(selectedCourse)
                     .collection("tasks")
                     .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            taskList.clear();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Task taskItem = document.toObject(Task.class);
-                                if ("Pending".equals(taskItem.getTaskStatus())) {
-                                    taskList.add(taskItem);
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                Log.d("BeforeAdapter", "List is " + (taskList == null ? "null" : "not null"));
+                                taskList.clear();
+                                for(QueryDocumentSnapshot document : task.getResult()) {
+                                    String taskTitle = (String) document.getString("taskTitle");
+                                    String taskDetails = (String) document.getString("taskDetails");
+                                    String taskStatus = (String) document.getString("taskStatus");
+                                    String reminderStatus = (String) document.getString("reminderStatus");
+                                    String startDateString = (String) document.getString("startDate");
+                                    String endDateString = (String) document.getString("endDate");
+                                    Log.d(TAG, "Task added: Title=" + taskTitle + ", Details=" + taskDetails + ", Status=" + taskStatus +
+                                            ", ReminderStatus=" + reminderStatus + ", StartDate=" + startDateString + ", EndDate=" + endDateString);
+
+                                    taskList.add(new Task(taskTitle, taskDetails, taskStatus, reminderStatus, startDateString, endDateString));
                                 }
+                                Log.d(TAG, "Task list size: " + taskList.size());
+                                Log.d(TAG, "notifyDataSetChanged called");
+                                //taskAdapter.notifyDataSetChanged();
+                                Log.d(TAG, "sizeeeeeeee:" + taskList.size());
+                                taskAdapter.setTaskList(taskList);
                             }
-                            Collections.sort(taskList, (task1, task2) -> task1.getEndDate().compareTo(task2.getEndDate()));
-                            taskAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting tasks: ", task.getException());
                         }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error retrieving events: ", e);
                     });
         } else {
-            Log.e(TAG, "User email, selected label, or selected course is null");
+            Log.e(TAG, "User email, selected label, or selected course is null:"+currentUser+":"+selectedLabel+":"+selectedCourse);
         }
     }
 
@@ -120,6 +137,7 @@ public class ViewTasksPage extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.menu_home) {
                 startActivity(new Intent(this, MainActivity.class));
+                finish();
                 return true;
             } else if (item.getItemId() == R.id.menu_label) {
                 startActivity(new Intent(this, LabelPage.class));

@@ -109,7 +109,7 @@ public class ViewEventsPage extends AppCompatActivity {
                                     Log.d(TAG, "Event added: Name=" + eventName + ", Details=" + eventDetails + ", Date=" + eventDate);
                                     eventList.add(new Event(eventName, eventDetails, eventDate));
                                 }
-                                eventsAdapter.notifyDataSetChanged();
+                                eventsAdapter.setEvents(eventList);
                             } else {
                                 Log.d(TAG, "No such document");
                             }

@@ -12,12 +12,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> taskList;
 
     public TaskAdapter(List<Task> taskList) {
-        this.taskList = taskList;
+        this.taskList = filterNonCompletedTasks(taskList);
+    }
+
+    // Helper method to filter out completed tasks
+    private List<Task> filterNonCompletedTasks(List<Task> tasks) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return tasks.stream()
+                    .filter(task -> !"Completed".equals(task.getTaskStatus()))
+                    .collect(Collectors.toList());
+        } else {
+            List<Task> filteredTasks = new ArrayList<>();
+            for (Task task : tasks) {
+                if (!"Completed".equals(task.getTaskStatus())) {
+                    filteredTasks.add(task);
+                }
+            }
+            return filteredTasks;
+        }
+    }
+
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = filterNonCompletedTasks(taskList);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -42,16 +65,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.checkboxDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 task.setTaskStatus("Completed");
-                taskList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, taskList.size());
+                int currentPosition = holder.getAdapterPosition();
+                taskList.remove(currentPosition);
+                notifyItemRemoved(currentPosition);
+                notifyItemRangeChanged(currentPosition, taskList.size());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.d("TaskAdapter", "getItemCount called: " + taskList.size());
         return taskList.size();
     }
 
@@ -70,4 +93,3 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 }
-
